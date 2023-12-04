@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
@@ -14,17 +14,17 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Target_Practice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OoZ-ae-KhM">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="781"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                             </arscnView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="AhD-R4-ZPV">
-                                <rect key="frame" x="0.0" y="789" width="414" height="73"/>
+                                <rect key="frame" x="49" y="658" width="316" height="34.333333333333371"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6GL-1S-aHX">
-                                        <rect key="frame" x="0.0" y="0.0" width="177" height="73"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Freeze Frame"/>
                                         <connections>
@@ -32,28 +32,24 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K0W-J1-cb3">
-                                        <rect key="frame" x="237" y="0.0" width="177" height="73"/>
+                                        <rect key="frame" x="188" y="0.0" width="128" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Draw"/>
                                     </button>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="414" id="WH1-qo-BBT"/>
-                                    <constraint firstAttribute="height" constant="73" id="thX-RS-RHZ"/>
-                                </constraints>
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="top" secondItem="OoZ-ae-KhM" secondAttribute="bottom" constant="8" symbolic="YES" id="200-gP-vks"/>
-                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="2dh-Pn-Ba6"/>
-                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="817-81-40a"/>
-                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="IwX-7s-I4E"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="OoZ-ae-KhM" secondAttribute="bottom" constant="81" id="K5e-sa-Db7"/>
-                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="VD6-vd-Np9"/>
-                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="v5v-vs-wbs"/>
-                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ziM-ob-ae9"/>
+                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="1xA-b7-d4W"/>
+                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="49" id="3mL-H0-5C8"/>
+                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="6L2-Aj-pPA"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="AhD-R4-ZPV" secondAttribute="bottom" constant="43.670000000000002" id="bO3-SA-uqe"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="AhD-R4-ZPV" secondAttribute="trailing" constant="49" id="dnH-kd-AMt"/>
+                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="hbf-d9-fqk"/>
+                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="p94-DI-Wvw"/>
+                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="638" id="qSe-6u-kZE"/>
                         </constraints>
                     </view>
                     <connections>
@@ -63,7 +59,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139.13043478260872" y="3.2608695652173916"/>
+            <point key="canvasLocation" x="139.13043478260872" y="2.4456521739130435"/>
         </scene>
     </scenes>
     <resources>

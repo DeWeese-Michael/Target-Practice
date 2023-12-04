@@ -32,7 +32,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         super.viewDidLoad()
 
         sceneView.frame = self.view.bounds
-        self.view.addSubview(sceneView)
         self.sceneView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         sceneView.delegate = self
@@ -50,9 +49,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
         // setup some geometry for a simple plane
-        let imagePlane = SCNPlane(width:sceneView.bounds.width/6000,
-                                  height:sceneView.bounds.height/6000)
+        // TODO - Change snapshot to be a constant size, not small
+        // Create new SCPlane outside of this function
+        // if nil; need to create SCNPlane and add node
+        // else, update position
+        let imagePlane = SCNPlane(width:sceneView.bounds.width/600,
+                                  height:sceneView.bounds.height/600)
         
+        // TODO - Add snapshot change distance
 
         imagePlane.firstMaterial?.diffuse.contents = sceneView.snapshot()
         imagePlane.firstMaterial?.lightingModel = .constant
@@ -65,10 +69,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // step one create a translation transform
         var translation = matrix_identity_float4x4
-        translation.columns.3.z = -0.3
+        translation.columns.3.z = -3
+        translation.columns.0.x = 0
+        translation.columns.0.y = -1
+        translation.columns.1.x = -1
+        translation.columns.1.y = 0
+        //print(translation)
+        
         
         // step two, apply translation relative to camera for the node
-        planeNode.simdTransform = matrix_multiply(currentFrame.camera.transform, translation )
+        planeNode.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
+        
+        
+        
     }
     
 
