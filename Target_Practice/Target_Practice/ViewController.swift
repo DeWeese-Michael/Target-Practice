@@ -25,6 +25,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var freezeFrame: UIButton!
+    @IBOutlet weak var Draw: UIButton!
     
     let focusNode = FocusSquare()
 
