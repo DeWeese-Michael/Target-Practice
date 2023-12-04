@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
@@ -14,29 +14,46 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Target_Practice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OoZ-ae-KhM">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="655"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="781"/>
                             </arscnView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6GL-1S-aHX">
-                                <rect key="frame" x="20" y="681" width="128" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Freeze Frame"/>
-                                <connections>
-                                    <action selector="handleTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="EdQ-0q-JHx"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="AhD-R4-ZPV">
+                                <rect key="frame" x="0.0" y="789" width="414" height="73"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6GL-1S-aHX">
+                                        <rect key="frame" x="0.0" y="0.0" width="177" height="73"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Freeze Frame"/>
+                                        <connections>
+                                            <action selector="handleTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="EdQ-0q-JHx"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K0W-J1-cb3">
+                                        <rect key="frame" x="237" y="0.0" width="177" height="73"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Draw"/>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="414" id="WH1-qo-BBT"/>
+                                    <constraint firstAttribute="height" constant="73" id="thX-RS-RHZ"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="top" secondItem="OoZ-ae-KhM" secondAttribute="bottom" constant="8" symbolic="YES" id="200-gP-vks"/>
                             <constraint firstItem="OoZ-ae-KhM" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="2dh-Pn-Ba6"/>
                             <constraint firstItem="OoZ-ae-KhM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="817-81-40a"/>
                             <constraint firstItem="OoZ-ae-KhM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="IwX-7s-I4E"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="OoZ-ae-KhM" secondAttribute="bottom" constant="81" id="K5e-sa-Db7"/>
+                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="VD6-vd-Np9"/>
+                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="v5v-vs-wbs"/>
+                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ziM-ob-ae9"/>
                         </constraints>
                     </view>
                     <connections>
