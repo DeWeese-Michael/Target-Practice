@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,19 +18,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OoZ-ae-KhM">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="655"/>
                             </arscnView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6GL-1S-aHX">
+                                <rect key="frame" x="20" y="681" width="128" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Freeze Frame"/>
+                                <connections>
+                                    <action selector="handleTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="EdQ-0q-JHx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="OoZ-ae-KhM" secondAttribute="bottom" id="45l-ve-Zwb"/>
-                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="RDy-WG-yjh"/>
-                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="uSW-nx-Y77"/>
-                            <constraint firstAttribute="trailing" secondItem="OoZ-ae-KhM" secondAttribute="trailing" id="wwc-gI-evV"/>
+                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="2dh-Pn-Ba6"/>
+                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="817-81-40a"/>
+                            <constraint firstItem="OoZ-ae-KhM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="IwX-7s-I4E"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="OoZ-ae-KhM" secondAttribute="bottom" constant="81" id="K5e-sa-Db7"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="freezeFrame" destination="6GL-1S-aHX" id="7DR-Sq-Ugu"/>
                         <outlet property="sceneView" destination="OoZ-ae-KhM" id="Mr4-RJ-v9x"/>
                     </connections>
                 </viewController>

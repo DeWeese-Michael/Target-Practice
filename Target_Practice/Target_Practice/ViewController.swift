@@ -24,6 +24,8 @@ extension ViewController {
 class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
+    @IBOutlet weak var freezeFrame: UIButton!
+    
     let focusNode = FocusSquare()
 
     override func viewDidLoad() {
@@ -39,6 +41,36 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.focusNode.viewDelegate = sceneView
         sceneView.scene.rootNode.addChildNode(self.focusNode)
     }
+    
+    @IBAction func handleTap(_ sender: UIButton) {
+        
+        // grab the current AR session frame from the scene, if possible
+        guard let currentFrame = sceneView.session.currentFrame else {
+            return
+        }
+        
+        // setup some geometry for a simple plane
+        let imagePlane = SCNPlane(width:sceneView.bounds.width/6000,
+                                  height:sceneView.bounds.height/6000)
+        
+
+        imagePlane.firstMaterial?.diffuse.contents = sceneView.snapshot()
+        imagePlane.firstMaterial?.lightingModel = .constant
+        
+        // add the node to the scene
+        let planeNode = SCNNode(geometry:imagePlane)
+        sceneView.scene.rootNode.addChildNode(planeNode)
+        
+        // update the node to be a bit in front of the camera inside the AR session
+        
+        // step one create a translation transform
+        var translation = matrix_identity_float4x4
+        translation.columns.3.z = -0.3
+        
+        // step two, apply translation relative to camera for the node
+        planeNode.simdTransform = matrix_multiply(currentFrame.camera.transform, translation )
+    }
+    
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
