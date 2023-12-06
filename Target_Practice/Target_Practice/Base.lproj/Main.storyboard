@@ -58,7 +58,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="Draw" destination="K0W-J1-cb3" id="Uo4-fY-V7r"/>
                         <outlet property="fireButton" destination="K0W-J1-cb3" id="hhh-cd-wtB"/>
                         <outlet property="freezeFrame" destination="6GL-1S-aHX" id="7DR-Sq-Ugu"/>
                         <outlet property="sceneView" destination="OoZ-ae-KhM" id="Mr4-RJ-v9x"/>

@@ -101,6 +101,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // add the node to the scene
         let planeNode = SCNNode(geometry:imagePlane)
+        planeNode.name = "planeNode"
+        sceneView.scene.rootNode.childNodes.filter({ $0.name == "planeNode" }).forEach({ $0.removeFromParentNode() })
         sceneView.scene.rootNode.addChildNode(planeNode)
         
         // update the node to be a bit in front of the camera inside the AR session
