@@ -9,6 +9,7 @@ import UIKit
 import SceneKit
 import ARKit
 import Vision
+import CoreMotion
 
 import FocusNode
 import SmartHitTest
@@ -25,12 +26,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var freezeFrame: UIButton!
-    @IBOutlet weak var Draw: UIButton!
+    
+    @IBOutlet weak var arrowImageView: UIImageView!// TODO:: add in proper arrow implementation
+    @IBOutlet weak var fireButton: UIButton! //connect to draw button
+    
+    var motionManager = CMMotionManager()
+    var isFiring = false
     
     let focusNode = FocusSquare()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupMotionManager()
 
         sceneView.frame = self.view.bounds
         self.sceneView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -40,7 +47,37 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
         self.focusNode.viewDelegate = sceneView
         sceneView.scene.rootNode.addChildNode(self.focusNode)
+        
     }
+    
+    func setupMotionManager() {//motion for arrow
+        motionManager.deviceMotionUpdateInterval = 0.1
+        motionManager.startDeviceMotionUpdates(to: .main) { (motion, error) in
+            if let motion = motion {
+                self.handleDeviceMotion(motion)
+            }
+        }
+    }
+    
+    func handleDeviceMotion(_ motion: CMDeviceMotion) {//arrow drop
+            let gravity = motion.gravity
+            let rotation = atan2(gravity.x, gravity.y) - .pi
+
+            if isFiring {
+                // Adjust arrow angle based on the device's motion
+                let arrowRotation = CGFloat(rotation)
+                arrowImageView.transform = CGAffineTransform(rotationAngle: arrowRotation)
+            }
+        }
+    
+    @IBAction func fireButtonPressed(_ sender: UIButton) {
+            isFiring = true
+        }
+
+    @IBAction func fireButtonReleased(_ sender: UIButton) {
+            isFiring = false
+            // TODO:: Add code to handle arrow release logic, e.g., launch arrow with calculated power.
+        }
     
     @IBAction func handleTap(_ sender: UIButton) {
         

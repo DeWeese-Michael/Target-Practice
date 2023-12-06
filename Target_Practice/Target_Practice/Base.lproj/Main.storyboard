@@ -14,17 +14,17 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Target_Practice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OoZ-ae-KhM">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                             </arscnView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="AhD-R4-ZPV">
-                                <rect key="frame" x="49" y="658" width="316" height="34.333333333333371"/>
+                                <rect key="frame" x="49" y="682" width="316" height="136.33333333333337"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6GL-1S-aHX">
-                                        <rect key="frame" x="0.0" y="0.0" width="128" height="34.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="136.33333333333334"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Freeze Frame"/>
                                         <connections>
@@ -32,11 +32,14 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K0W-J1-cb3">
-                                        <rect key="frame" x="188" y="0.0" width="128" height="34.333333333333336"/>
+                                        <rect key="frame" x="188" y="0.0" width="128" height="136.33333333333334"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Draw">
                                             <color key="baseBackgroundColor" systemColor="systemRedColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="fireButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aax-0o-vyx"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -56,6 +59,7 @@
                     </view>
                     <connections>
                         <outlet property="Draw" destination="K0W-J1-cb3" id="Uo4-fY-V7r"/>
+                        <outlet property="fireButton" destination="K0W-J1-cb3" id="hhh-cd-wtB"/>
                         <outlet property="freezeFrame" destination="6GL-1S-aHX" id="7DR-Sq-Ugu"/>
                         <outlet property="sceneView" destination="OoZ-ae-KhM" id="Mr4-RJ-v9x"/>
                     </connections>
