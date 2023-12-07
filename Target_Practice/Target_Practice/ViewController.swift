@@ -37,8 +37,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setupMotionManager()
-//        addArrow()
+        setupMotionManager()
+        addArrow()
 
         sceneView.frame = self.view.bounds
         self.sceneView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -70,6 +70,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func addArrow(){
         //let sphere = SCNNode(geometry: SCNCylinder(radius: 5, height: 3))
         
+  
         // TODO - arrow = SCNScene(named: "arrow_larger.scn")
         // Should Add Arrow as separate objects.
         let arrow = SCNNode(geometry: SCNSphere(radius: 5))
