@@ -54,21 +54,47 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         motionManager.deviceMotionUpdateInterval = 0.1
         motionManager.startDeviceMotionUpdates(to: .main) { (motion, error) in
             if let motion = motion {
-                self.handleDeviceMotion(motion)
+                self.addArrow()
             }
         }
     }
     
-    func handleDeviceMotion(_ motion: CMDeviceMotion) {//arrow drop
-            let gravity = motion.gravity
-            let rotation = atan2(gravity.x, gravity.y) - .pi
+    func addArrow(){
+        //let sphere = SCNNode(geometry: SCNCylinder(radius: 5, height: 3))
+        let arrow = SCNNode(geometry: SCNSphere(radius: 5))
+        
+        // add a red arrow
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.red
+        
+        // that can bounce around the room environment
+        let physics = SCNPhysicsBody(type: .dynamic,
+                                     shape:SCNPhysicsShape(geometry: arrow.geometry!, options:nil))
 
-            if isFiring {
-                // Adjust arrow angle based on the device's motion
-                let arrowRotation = CGFloat(rotation)
-                arrowImageView.transform = CGAffineTransform(rotationAngle: arrowRotation)
-            }
-        }
+        physics.isAffectedByGravity = true
+        physics.friction = 1
+        physics.restitution = 2.5
+        physics.mass = 3
+        
+        
+        arrow.geometry?.firstMaterial = material
+//        arrow.position = cameraNode.position
+        arrow.physicsBody = physics
+
+        
+//        scene.rootNode.addChildNode(arrow)
+    }
+    
+    //    func addArrow(_ motion: CMDeviceMotion) {//arrow drop
+    //            let gravity = motion.gravity
+    //            let rotation = atan2(gravity.x, gravity.y) - .pi
+    //
+    //            if isFiring {
+    //                // Adjust arrow angle based on the device's motion
+    //                let arrowRotation = CGFloat(rotation)
+    //                arrowImageView.transform = CGAffineTransform(rotationAngle: arrowRotation)
+    //            }
+    //        }
     
     @IBAction func fireButtonPressed(_ sender: UIButton) {
             isFiring = true
@@ -77,6 +103,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBAction func fireButtonReleased(_ sender: UIButton) {
             isFiring = false
             // TODO:: Add code to handle arrow release logic, e.g., launch arrow with calculated power.
+        
         }
     
     @IBAction func handleTap(_ sender: UIButton) {
