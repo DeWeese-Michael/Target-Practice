@@ -16,8 +16,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "108"
             endingLineNumber = "108"
-            landmarkName = "fireButtonPressed(_:)"
-            landmarkType = "7">
+            landmarkName = "addArrow()"
+            landmarkType = "9">
             <Locations>
                <Location
                   uuid = "651E0527-086C-44DB-8BB6-0015F927F274 - ebc56b28b2ed32d7"

@@ -28,7 +28,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet weak var freezeFrame: UIButton!
     
     @IBOutlet weak var arrowImageView: UIImageView!// TODO:: add in proper arrow implementation
-    @IBOutlet weak var fireButton: UIButton! //connect to draw button
+    @IBOutlet weak var fireButton: UIButton!
     
     var motionManager = CMMotionManager()
     var isFiring = false
@@ -37,7 +37,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupMotionManager()
+//        setupMotionManager()
+//        addArrow()
 
         sceneView.frame = self.view.bounds
         self.sceneView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -95,33 +96,58 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.scene.rootNode.addChildNode(arrow)
     }
     
-    //    func addArrow(_ motion: CMDeviceMotion) {//arrow drop
-    //            let gravity = motion.gravity
-    //            let rotation = atan2(gravity.x, gravity.y) - .pi
-    //
-    //            if isFiring {
-    //                // Adjust arrow angle based on the device's motion
-    //                let arrowRotation = CGFloat(rotation)
-    //                arrowImageView.transform = CGAffineTransform(rotationAngle: arrowRotation)
-    //            }
-    //        }
+    //gravity function not being used yet
+//        func handleDeviceMotion(_ motion: CMDeviceMotion) {//arrow drop
+//                let gravity = motion.gravity
+//                let rotation = atan2(gravity.x, gravity.y) - .pi
+//
+//                if isFiring {
+//                    // Adjust arrow angle based on the device's motion
+//                    let arrowRotation = CGFloat(rotation)
+//                    arrowImageView.transform = CGAffineTransform(rotationAngle: arrowRotation)
+//                }
+//            }
     
     @IBAction func fireButtonPressed(_ sender: UIButton) {
             isFiring = true
         }
-
-    @IBAction func fireButtonReleased(_ sender: UIButton) {
-            isFiring = false
-        /*
-            if let node = arrow{
-                var moveAction:SCNAction
-                // TODO:: Add code to handle arrow release logic, e.g., launch arrow with calculated power.
-                moveAction = SCNAction.moveBy(x: 0, y: 0, z: -0.25, duration: 0.25)
-                
-                node.runAction
-            }
-            */
+    
+    func createArrowNode() -> SCNNode? {//call in 3d arrow
+        guard let arrowScene = SCNScene(named: "arrow.scn"),
+              let arrowNode = arrowScene.rootNode.childNode(withName: "arrowNode", recursively: true) else {
+            return nil
         }
+
+        // Set the initial position and orientation of the arrow node
+        arrowNode.simdTransform = sceneView.session.currentFrame!.camera.transform
+
+        return arrowNode
+    }
+    
+    func configureArrowNode(_ arrowNode: SCNNode) { //set launch and trajectory of arrow
+        // Configure physics
+        arrowNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(node: arrowNode, options: nil))
+        arrowNode.physicsBody?.isAffectedByGravity = true
+        arrowNode.physicsBody?.categoryBitMask = 1 // Set appropriate category bit mask
+
+        // Set appearance properties
+        arrowNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+    }
+    
+    @IBAction func fireButtonReleased(_ sender: UIButton) { //draw and release arrow
+        isFiring = false
+
+        if let arrowNode = createArrowNode() {
+            configureArrowNode(arrowNode)
+
+            // Add the arrow node to the scene
+            sceneView.scene.rootNode.addChildNode(arrowNode)
+        }
+        
+//        guard let arrowNode = createArrowNode() else { //is this better? replicating handle tap implementaion
+//            return
+//        }
+    }
     
     @IBAction func handleTap(_ sender: UIButton) {
         
@@ -163,11 +189,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // step two, apply translation relative to camera for the node
         planeNode.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
-        
-        
-        
     }
-    
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -185,4 +207,3 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.session.pause()
     }
 }
-
