@@ -48,6 +48,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.focusNode.viewDelegate = sceneView
         sceneView.scene.rootNode.addChildNode(self.focusNode)
         
+        if let scene = SCNScene(named: "arrow_larger.scn"){
+            // Set the scene to the view
+            sceneView.scene = scene
+            print("arrow added")
+        }
+        
     }
     
     func setupMotionManager() {//motion for arrow
@@ -55,12 +61,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         motionManager.startDeviceMotionUpdates(to: .main) { (motion, error) in
             if let motion = motion {
                 self.addArrow()
+                //print("motion manager set")
             }
         }
     }
     
     func addArrow(){
         //let sphere = SCNNode(geometry: SCNCylinder(radius: 5, height: 3))
+        
+        // TODO - arrow = SCNScene(named: "arrow_larger.scn")
+        // Should Add Arrow as separate objects.
         let arrow = SCNNode(geometry: SCNSphere(radius: 5))
         
         // add a red arrow
@@ -81,8 +91,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //        arrow.position = cameraNode.position
         arrow.physicsBody = physics
 
-        
-//        scene.rootNode.addChildNode(arrow)
+        //sceneView.scene.rootNode.addChildNode(planeNode)
+        sceneView.scene.rootNode.addChildNode(arrow)
     }
     
     //    func addArrow(_ motion: CMDeviceMotion) {//arrow drop
@@ -102,8 +112,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBAction func fireButtonReleased(_ sender: UIButton) {
             isFiring = false
-            // TODO:: Add code to handle arrow release logic, e.g., launch arrow with calculated power.
-        
+        /*
+            if let node = arrow{
+                var moveAction:SCNAction
+                // TODO:: Add code to handle arrow release logic, e.g., launch arrow with calculated power.
+                moveAction = SCNAction.moveBy(x: 0, y: 0, z: -0.25, duration: 0.25)
+                
+                node.runAction
+            }
+            */
         }
     
     @IBAction func handleTap(_ sender: UIButton) {
