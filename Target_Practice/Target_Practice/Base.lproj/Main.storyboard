@@ -39,6 +39,7 @@
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="fireButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aax-0o-vyx"/>
+                                            <action selector="fireButtonReleased:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qv1-Hh-bSj"/>
                                         </connections>
                                     </button>
                                 </subviews>
