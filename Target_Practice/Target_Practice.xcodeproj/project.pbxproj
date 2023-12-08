@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		739A35B32B1D47C9004D3541 /* FocusNode in Frameworks */ = {isa = PBXBuildFile; productRef = 739A35B22B1D47C9004D3541 /* FocusNode */; };
-		A98A57C32B225CFB001C05C5 /* arrow.scn in Resources */ = {isa = PBXBuildFile; fileRef = A98A57C22B225CFB001C05C5 /* arrow.scn */; };
+		A98A57C52B22B2A8001C05C5 /* arrow_horizontal.scn in Resources */ = {isa = PBXBuildFile; fileRef = A98A57C42B22B2A8001C05C5 /* arrow_horizontal.scn */; };
 		D1880E2E2B1B874A00154726 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1880E2D2B1B874A00154726 /* AppDelegate.swift */; };
 		D1880E302B1B874A00154726 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1880E2F2B1B874A00154726 /* SceneDelegate.swift */; };
 		D1880E322B1B874A00154726 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1880E312B1B874A00154726 /* ViewController.swift */; };
@@ -18,7 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A98A57C22B225CFB001C05C5 /* arrow.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = arrow.scn; sourceTree = "<group>"; };
+		A98A57C42B22B2A8001C05C5 /* arrow_horizontal.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = arrow_horizontal.scn; sourceTree = "<group>"; };
 		D1880E2A2B1B874A00154726 /* Target_Practice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Target_Practice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1880E2D2B1B874A00154726 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D1880E2F2B1B874A00154726 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -60,11 +60,11 @@
 		D1880E2C2B1B874A00154726 /* Target_Practice */ = {
 			isa = PBXGroup;
 			children = (
+				A98A57C42B22B2A8001C05C5 /* arrow_horizontal.scn */,
 				D1880E2D2B1B874A00154726 /* AppDelegate.swift */,
 				D1880E2F2B1B874A00154726 /* SceneDelegate.swift */,
 				D1880E312B1B874A00154726 /* ViewController.swift */,
 				D1880E332B1B874A00154726 /* Main.storyboard */,
-				A98A57C22B225CFB001C05C5 /* arrow.scn */,
 				D1880E362B1B874B00154726 /* Assets.xcassets */,
 				D1880E382B1B874B00154726 /* LaunchScreen.storyboard */,
 				D1880E3B2B1B874B00154726 /* Info.plist */,
@@ -138,7 +138,7 @@
 			files = (
 				D1880E3A2B1B874B00154726 /* LaunchScreen.storyboard in Resources */,
 				D1880E372B1B874B00154726 /* Assets.xcassets in Resources */,
-				A98A57C32B225CFB001C05C5 /* arrow.scn in Resources */,
+				A98A57C52B22B2A8001C05C5 /* arrow_horizontal.scn in Resources */,
 				D1880E352B1B874A00154726 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

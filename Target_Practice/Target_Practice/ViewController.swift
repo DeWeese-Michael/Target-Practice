@@ -37,8 +37,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        setupMotionManager()
+//        setupMotionManager()
         createArrowNode()
+        shootArrow()
         
         sceneView.frame = self.view.bounds
         self.sceneView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -49,7 +50,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         self.focusNode.viewDelegate = sceneView
         sceneView.scene.rootNode.addChildNode(self.focusNode)
         
-        if let scene = SCNScene(named: "arrow.scn"){
+        if let scene = SCNScene(named: "arrow_horizontal.scn"){
             // Set the scene to the view
             sceneView.scene = scene
             print("arrow added")
@@ -57,19 +58,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
-    //    func setupMotionManager() {//motion for arrow
-    //        motionManager.deviceMotionUpdateInterval = 0.1
-    //        motionManager.startDeviceMotionUpdates(to: .main) { (motion, error) in
-    //            if let motion = motion {
-    //                self.addArrow()
-    //                //print("motion manager set")
-    //            }
-    //        }
-    //    }
+//        func setupMotionManager() {//motion for arrow
+//            motionManager.deviceMotionUpdateInterval = 0.1
+//            motionManager.startDeviceMotionUpdates(to: .main) { (motion, error) in
+//                if let motion = motion {
+//                    self.createArrowNode()
+//                    //print("motion manager set")
+//                }
+//            }
+//        }
     
     func shootArrow() {
         // Load the arrow scene
-        guard let arrowScene = SCNScene(named: "arrow.scn") else {
+        guard let arrowScene = SCNScene(named: "arrow_horizontal.scn") else {
             print("Error: Unable to load arrow scene.")
             return
         }
@@ -84,7 +85,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if let currentFrame = sceneView.session.currentFrame {
             // Get the camera's position and orientation
             var translation = matrix_identity_float4x4
-            translation.columns.3.z = -1.0 // Adjust the distance in front of the camera
             let arrowTransform = currentFrame.camera.transform * translation
 
             // Set the arrow node's transform
@@ -111,7 +111,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func createArrowNode() -> SCNNode? {
         // Load the arrow scene
-        guard let arrowScene = SCNScene(named: "arrow.scn") else {
+        guard let arrowScene = SCNScene(named: "arrow_horizontal.scn") else {
             print("Error: Unable to load arrow scene.")
             return nil
         }
@@ -124,15 +124,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
         // Set the initial position of the arrow node in front of the camera
         if let currentFrame = sceneView.session.currentFrame {
-            // Set the translation to a position in front of the camera
-            var translation = matrix_identity_float4x4
-            translation.columns.3.z = -1.0 // Adjust the distance in front of the camera
-
-            // Combine the camera transform with the translation
-            let updatedTransform = currentFrame.camera.transform * translation
-
-            // Set the arrow node's transform
-            arrowNode.simdTransform = updatedTransform
         } else {
             print("Error: Unable to get current frame from AR session.")
         }
@@ -187,18 +178,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         isFiring = true
     }
     
-//    func createArrowNode() -> SCNNode? {//call in 3d arrow
-//        guard let arrowScene = SCNScene(named: "arrow.scn"),
-//              let arrowNode = arrowScene.rootNode.childNode(withName: "arrowNode", recursively: true) else {
-//            return nil
-//        }
-//
-//        // Set the initial position and orientation of the arrow node
-//        arrowNode.simdTransform = sceneView.session.currentFrame!.camera.transform
-//
-//        return arrowNode
-//    }
-    
     func configureArrowNode(_ arrowNode: SCNNode) { //set launch and trajectory of arrow
         // Configure physics
         arrowNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(node: arrowNode, options: nil))
@@ -218,10 +197,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // Add the arrow node to the scene
                 sceneView.scene.rootNode.addChildNode(arrowNode)
             }
-    
-//            guard let arrowNode = createArrowNode() else { //is this better? replicating handle tap implementaion
-//                return
-//            }
 }
     
     @IBAction func handleTap(_ sender: UIButton) {
