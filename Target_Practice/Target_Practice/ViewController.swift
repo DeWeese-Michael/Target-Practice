@@ -23,7 +23,7 @@ extension ViewController {
 }
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
+    
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var freezeFrame: UIButton!
     
@@ -34,22 +34,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var isFiring = false
     
     let focusNode = FocusSquare()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupMotionManager()
-        addArrow()
-
+        //        setupMotionManager()
+        createArrowNode()
+        
         sceneView.frame = self.view.bounds
         self.sceneView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
+        
         sceneView.delegate = self
         sceneView.showsStatistics = true
-
+        
         self.focusNode.viewDelegate = sceneView
         sceneView.scene.rootNode.addChildNode(self.focusNode)
         
-        if let scene = SCNScene(named: "arrow_larger.scn"){
+        if let scene = SCNScene(named: "arrow.scn"){
             // Set the scene to the view
             sceneView.scene = scene
             print("arrow added")
@@ -57,80 +57,154 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
-    func setupMotionManager() {//motion for arrow
-        motionManager.deviceMotionUpdateInterval = 0.1
-        motionManager.startDeviceMotionUpdates(to: .main) { (motion, error) in
-            if let motion = motion {
-                self.addArrow()
-                //print("motion manager set")
-            }
+    //    func setupMotionManager() {//motion for arrow
+    //        motionManager.deviceMotionUpdateInterval = 0.1
+    //        motionManager.startDeviceMotionUpdates(to: .main) { (motion, error) in
+    //            if let motion = motion {
+    //                self.addArrow()
+    //                //print("motion manager set")
+    //            }
+    //        }
+    //    }
+    
+    func shootArrow() {
+        // Load the arrow scene
+        guard let arrowScene = SCNScene(named: "arrow.scn") else {
+            print("Error: Unable to load arrow scene.")
+            return
+        }
+
+        // Retrieve the arrow node from the scene
+        guard let arrowNode = arrowScene.rootNode.childNode(withName: "Cone", recursively: true) else {
+            print("Error: Unable to find arrow node in the scene.")
+            return
+        }
+
+        // Set the initial position of the arrow node in front of the camera
+        if let currentFrame = sceneView.session.currentFrame {
+            // Get the camera's position and orientation
+            var translation = matrix_identity_float4x4
+            translation.columns.3.z = -1.0 // Adjust the distance in front of the camera
+            let arrowTransform = currentFrame.camera.transform * translation
+
+            // Set the arrow node's transform
+            arrowNode.simdTransform = arrowTransform
+
+            // Add arrow node to the scene
+            sceneView.scene.rootNode.addChildNode(arrowNode)
+
+            // Apply a forward velocity to the arrow
+            let arrowDirection = arrowTransform.columns.2
+            let arrowVelocity = SCNVector3(arrowDirection.x * 5.0, arrowDirection.y * 5.0, arrowDirection.z * 5.0) // Adjust the speed
+
+            arrowNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+            arrowNode.physicsBody?.isAffectedByGravity = false
+            arrowNode.physicsBody?.velocity = arrowVelocity
+
+            arrowNode.physicsBody?.categoryBitMask = 0xFFFF
+            arrowNode.physicsBody?.collisionBitMask = 0xFFFF
+            arrowNode.physicsBody?.contactTestBitMask = 0xFFFF
+        } else {
+            print("Error: Unable to get current frame from AR session.")
         }
     }
     
-    func addArrow(){
-        //let sphere = SCNNode(geometry: SCNCylinder(radius: 5, height: 3))
-        
-  
-        // TODO - arrow = SCNScene(named: "arrow_larger.scn")
-        // Should Add Arrow as separate objects.
-        let arrow = SCNNode(geometry: SCNSphere(radius: 5))
-        
-        // add a red arrow
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.red
-        
-        // that can bounce around the room environment
-        let physics = SCNPhysicsBody(type: .dynamic,
-                                     shape:SCNPhysicsShape(geometry: arrow.geometry!, options:nil))
-
-        physics.isAffectedByGravity = true
-        physics.friction = 1
-        physics.restitution = 2.5
-        physics.mass = 3
-        
-        
-        arrow.geometry?.firstMaterial = material
-//        arrow.position = cameraNode.position
-        arrow.physicsBody = physics
-
-        //sceneView.scene.rootNode.addChildNode(planeNode)
-        sceneView.scene.rootNode.addChildNode(arrow)
-    }
-    
-    //gravity function not being used yet
-//        func handleDeviceMotion(_ motion: CMDeviceMotion) {//arrow drop
-//                let gravity = motion.gravity
-//                let rotation = atan2(gravity.x, gravity.y) - .pi
-//
-//                if isFiring {
-//                    // Adjust arrow angle based on the device's motion
-//                    let arrowRotation = CGFloat(rotation)
-//                    arrowImageView.transform = CGAffineTransform(rotationAngle: arrowRotation)
-//                }
-//            }
-    
-    @IBAction func fireButtonPressed(_ sender: UIButton) {
-            isFiring = true
-        }
-    
-    func createArrowNode() -> SCNNode? {//call in 3d arrow
-        guard let arrowScene = SCNScene(named: "arrow.scn"),
-              let arrowNode = arrowScene.rootNode.childNode(withName: "arrowNode", recursively: true) else {
+    func createArrowNode() -> SCNNode? {
+        // Load the arrow scene
+        guard let arrowScene = SCNScene(named: "arrow.scn") else {
+            print("Error: Unable to load arrow scene.")
             return nil
         }
 
-        // Set the initial position and orientation of the arrow node
-        arrowNode.simdTransform = sceneView.session.currentFrame!.camera.transform
+        // Retrieve the arrow node from the scene
+        guard let arrowNode = arrowScene.rootNode.childNode(withName: "Cone", recursively: true) else {
+            print("Error: Unable to find arrow node in the scene.")
+            return nil
+        }
+
+        // Set the initial position of the arrow node in front of the camera
+        if let currentFrame = sceneView.session.currentFrame {
+            // Set the translation to a position in front of the camera
+            var translation = matrix_identity_float4x4
+            translation.columns.3.z = -1.0 // Adjust the distance in front of the camera
+
+            // Combine the camera transform with the translation
+            let updatedTransform = currentFrame.camera.transform * translation
+
+            // Set the arrow node's transform
+            arrowNode.simdTransform = updatedTransform
+        } else {
+            print("Error: Unable to get current frame from AR session.")
+        }
 
         return arrowNode
     }
     
+    
+//        func addArrow(){
+//            //let sphere = SCNNode(geometry: SCNCylinder(radius: 5, height: 3))
+//
+//
+//            // TODO - arrow = SCNScene(named: "arrow_larger.scn")
+//            // Should Add Arrow as separate objects.
+//            let arrow = SCNNode(geometry: SCNSphere(radius: 5))
+//
+//            // add a red arrow
+//            let material = SCNMaterial()
+//            material.diffuse.contents = UIColor.red
+//
+//            // that can bounce around the room environment
+//            let physics = SCNPhysicsBody(type: .dynamic,
+//                                         shape:SCNPhysicsShape(geometry: arrow.geometry!, options:nil))
+//
+//            physics.isAffectedByGravity = true
+//            physics.friction = 1
+//            physics.restitution = 2.5
+//            physics.mass = 3
+//
+//
+//            arrow.geometry?.firstMaterial = material
+//    //        arrow.position = cameraNode.position
+//            arrow.physicsBody = physics
+//
+//            //sceneView.scene.rootNode.addChildNode(planeNode)
+//            sceneView.scene.rootNode.addChildNode(arrow)
+//        }
+//
+////    gravity function not being used yet
+//            func handleDeviceMotion(_ motion: CMDeviceMotion) {//arrow drop
+//                    let gravity = motion.gravity
+//                    let rotation = atan2(gravity.x, gravity.y) - .pi
+//
+//                    if isFiring {
+//                        // Adjust arrow angle based on the device's motion
+//                        let arrowRotation = CGFloat(rotation)
+//                        arrowImageView.transform = CGAffineTransform(rotationAngle: arrowRotation)
+//                    }
+//                }
+    
+    @IBAction func fireButtonPressed(_ sender: UIButton) {
+        isFiring = true
+    }
+    
+//    func createArrowNode() -> SCNNode? {//call in 3d arrow
+//        guard let arrowScene = SCNScene(named: "arrow.scn"),
+//              let arrowNode = arrowScene.rootNode.childNode(withName: "arrowNode", recursively: true) else {
+//            return nil
+//        }
+//
+//        // Set the initial position and orientation of the arrow node
+//        arrowNode.simdTransform = sceneView.session.currentFrame!.camera.transform
+//
+//        return arrowNode
+//    }
+    
     func configureArrowNode(_ arrowNode: SCNNode) { //set launch and trajectory of arrow
         // Configure physics
         arrowNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(node: arrowNode, options: nil))
-        arrowNode.physicsBody?.isAffectedByGravity = true
+        arrowNode.physicsBody?.isAffectedByGravity = false
         arrowNode.physicsBody?.categoryBitMask = 1 // Set appropriate category bit mask
-
+        
         // Set appearance properties
         arrowNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
     }
@@ -138,17 +212,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBAction func fireButtonReleased(_ sender: UIButton) { //draw and release arrow
         isFiring = false
 
-        if let arrowNode = createArrowNode() {
-            configureArrowNode(arrowNode)
-
-            // Add the arrow node to the scene
-            sceneView.scene.rootNode.addChildNode(arrowNode)
-        }
-        
-//        guard let arrowNode = createArrowNode() else { //is this better? replicating handle tap implementaion
-//            return
-//        }
-    }
+            if let arrowNode = createArrowNode() {
+                configureArrowNode(arrowNode)
+    
+                // Add the arrow node to the scene
+                sceneView.scene.rootNode.addChildNode(arrowNode)
+            }
+    
+//            guard let arrowNode = createArrowNode() else { //is this better? replicating handle tap implementaion
+//                return
+//            }
+}
     
     @IBAction func handleTap(_ sender: UIButton) {
         
