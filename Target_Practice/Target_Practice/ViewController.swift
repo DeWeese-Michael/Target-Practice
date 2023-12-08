@@ -22,7 +22,7 @@ extension ViewController {
     }
 }
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate {
     
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var freezeFrame: UIButton!
@@ -30,10 +30,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet weak var arrowImageView: UIImageView!// TODO:: add in proper arrow implementation
     @IBOutlet weak var fireButton: UIButton!
     
+    @IBOutlet weak var scoreLabel: UILabel!
+    
     var motionManager = CMMotionManager()
     var isFiring = false
     
     let focusNode = FocusSquare()
+    var score = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -221,8 +224,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // add the node to the scene
         let planeNode = SCNNode(geometry:imagePlane)
-        planeNode.name = "planeNode"
-        sceneView.scene.rootNode.childNodes.filter({ $0.name == "planeNode" }).forEach({ $0.removeFromParentNode() })
+        planeNode.name = "target"
+        sceneView.scene.rootNode.childNodes.filter({ $0.name == "target" }).forEach({ $0.removeFromParentNode() })
         sceneView.scene.rootNode.addChildNode(planeNode)
         
         // update the node to be a bit in front of the camera inside the AR session
@@ -240,6 +243,63 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // step two, apply translation relative to camera for the node
         planeNode.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
     }
+    
+    //Function that handles arrow/target contact
+    func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
+        
+        func updateContact(){
+            // Add
+            self.score += 1
+            
+            DispatchQueue.main.async {
+                self.updateScore()
+            }
+        }
+        
+        if let nameA = contact.nodeA.name,
+            let nameB = contact.nodeB.name,
+            nameA == "target" || nameB == "cone"{ //If the ball makes contact with the hoop or the backboard
+            // remove basketball from the scene
+            updateContact()
+        }
+        
+        if let nameB = contact.nodeB.name,
+           let nameA = contact.nodeA.name,
+            nameB == "target" || nameA == "cone"{//If the ball makes contact with the hoop or the backboard
+            
+            updateContact()
+        }
+        
+    }
+    
+    //Updates the score for the
+    func updateScore(){
+        //if(updating){return}
+        // change the current object we are asking the participant to find
+        
+        scoreLabel.text = "\(self.score)"
+        
+        /*
+        topLabel.layer.add(animation, forKey: animationKey)
+        topLabel.text = "Mavericks: \(self.playerScore), Spurs: \(self.computerScore)"
+        
+        if(playerScore>=5 || computerScore>=5){
+            // if here, End the game
+            topLabel.layer.add(animation, forKey: animationKey)
+            if playerScore > computerScore{
+                topLabel.text = "Mavs Win! San Antonio is now a DFW Suburb!"
+                topLabel.textColor = UIColor.systemBlue
+            }else{
+                topLabel.text = "Mavs Lose! San Antonio finally has something going for it!"
+                topLabel.textColor = UIColor.black
+            }
+
+        }else{
+            //updating = false
+        }*/
+    }
+
+    
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
