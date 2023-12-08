@@ -27,7 +27,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var freezeFrame: UIButton!
     
-    @IBOutlet weak var arrowImageView: UIImageView!// TODO:: add in proper arrow implementation
+    @IBOutlet weak var arrowImageView: UIImageView!
     @IBOutlet weak var fireButton: UIButton!
     
     @IBOutlet weak var scoreLabel: UILabel!
@@ -179,6 +179,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     @IBAction func fireButtonPressed(_ sender: UIButton) {
         isFiring = true
+        //shoot arrow
+        shootArrow()
     }
     
     func configureArrowNode(_ arrowNode: SCNNode) { //set launch and trajectory of arrow
