@@ -53,11 +53,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         self.focusNode.viewDelegate = sceneView
         sceneView.scene.rootNode.addChildNode(self.focusNode)
         
-        if let scene = SCNScene(named: "arrow_horizontal.scn"){
-            // Set the scene to the view
-            sceneView.scene = scene
-            print("arrow added")
-        }
+//        if let scene = SCNScene(named: "arrow_horizontal.scn"){
+//            // Set the scene to the view
+//            sceneView.scene = scene
+//            print("arrow added")
+//        }
         
     }
     
