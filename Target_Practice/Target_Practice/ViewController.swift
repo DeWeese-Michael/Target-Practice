@@ -27,7 +27,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var freezeFrame: UIButton!
     
-    @IBOutlet weak var arrowImageView: UIImageView!
+    @IBOutlet weak var arrowImageView: UIImageView!// TODO:: add in proper arrow implementation
     @IBOutlet weak var fireButton: UIButton!
     
     @IBOutlet weak var scoreLabel: UILabel!
@@ -37,6 +37,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     let focusNode = FocusSquare()
     var score = 0
+    var lastNode:SCNNode? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -179,8 +180,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     @IBAction func fireButtonPressed(_ sender: UIButton) {
         isFiring = true
-        //shoot arrow
-        shootArrow()
     }
     
     func configureArrowNode(_ arrowNode: SCNNode) { //set launch and trajectory of arrow
@@ -191,6 +190,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         // Set appearance properties
         arrowNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        self.lastNode = arrowNode
     }
     
     @IBAction func fireButtonReleased(_ sender: UIButton) { //draw and release arrow
@@ -201,6 +201,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
                 // Add the arrow node to the scene
                 sceneView.scene.rootNode.addChildNode(arrowNode)
+                if let node = lastNode{
+                    let moveValue:CGFloat = 10.0
+                    let duration:TimeInterval = 5
+                    var moveAction:SCNAction
+                    moveAction = SCNAction.moveBy(x: 0.0, y: 0.0, z: -moveValue, duration: duration)
+                    
+                    node.runAction(moveAction)
+                }
+                
             }
 }
     
