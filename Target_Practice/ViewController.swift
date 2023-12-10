@@ -44,7 +44,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     var score = 0
     var lastNode:SCNNode? = nil
     var startingPoint: Date?
-    
+    var isPressing: Bool = false
     
     
     
@@ -66,13 +66,63 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         startingPoint = Date()
         self.focusNode.viewDelegate = sceneView
         sceneView.scene.rootNode.addChildNode(self.focusNode)
-      
-        
-        
-        
     }
     
+    
+    
+    @IBAction func longPressHandler(_ sender: UILongPressGestureRecognizer) {
+        
+        if sender.state == .began{
+            self.isPressing = true
+            print("Ended Began State. State: \(self.isPressing)")
+            self.startingPoint = Date()
+        }
+        
+        if sender.state == .ended{
+            self.isPressing = false
+            print("Ended End State. State: \(self.isPressing)")
+            
+            //draw and release arrow
+            isFiring = false
 
+                if let arrowNode = createArrowNode() {
+                    configureArrowNode(arrowNode)
+        
+                    // Add the arrow node to the scene
+                    sceneView.scene.rootNode.addChildNode(arrowNode)
+                    
+                    if let currentFrame = sceneView.session.currentFrame {
+                        // Get the camera's position and orientation
+                        var translation = matrix_identity_float4x4
+                        let arrowTransform = currentFrame.camera.transform * translation
+                        
+                        // Set the arrow node's transform
+                        arrowNode.simdTransform = arrowTransform
+                        
+                        // Add arrow node to the scene
+                        sceneView.scene.rootNode.addChildNode(arrowNode)
+                        
+                        // Apply a forward velocity to the arrow
+                        let arrowDirection = arrowTransform.columns.2
+                        
+                        if let node = lastNode{
+                            let moveValue:CGFloat = 0.0
+                            let duration:TimeInterval = 5
+                            var moveAction:SCNAction
+                            arrowNode.eulerAngles = SCNVector3Make(-1, 0, 1)
+                            let power : Double = (startingPoint!.timeIntervalSinceNow * -3)
+                            
+                            print("Power: \(power)")
+                            
+                            moveAction = SCNAction.moveBy(x: CGFloat(arrowDirection.x) * 5.0 * -power, y: CGFloat(arrowDirection.y) * 5.0 * -power, z: CGFloat(arrowDirection.z) * 5.0 * -power, duration: duration)
+                            
+                            node.runAction(moveAction)
+                        }
+                    }
+                }
+        }
+    }
+    
     
     func shootArrow() {
         // Load the arrow scene
@@ -175,7 +225,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
     }
     
-    @IBAction func fireButtonReleased(_ sender: UIButton) { //draw and release arrow
+    @IBAction func fireButtonReleased(_ sender: UIButton) { 
+        //draw and release arrow
         isFiring = false
 
             if let arrowNode = createArrowNode() {

@@ -33,6 +33,7 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K0W-J1-cb3">
                                         <rect key="frame" x="188" y="0.0" width="128" height="34.333333333333336"/>
+                                        <gestureRecognizers/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Draw">
                                             <color key="baseBackgroundColor" systemColor="systemRedColor"/>
@@ -40,6 +41,7 @@
                                         <connections>
                                             <action selector="fireButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aax-0o-vyx"/>
                                             <action selector="fireButtonReleased:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MyV-B2-kpT"/>
+                                            <outletCollection property="gestureRecognizers" destination="JhJ-rE-wa3" appends="YES" id="Hyy-97-vS7"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -80,6 +82,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="JhJ-rE-wa3">
+                    <connections>
+                        <action selector="longPressHandler:" destination="BYZ-38-t0r" id="Z9L-od-85w"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="139.13043478260872" y="2.4456521739130435"/>
         </scene>
