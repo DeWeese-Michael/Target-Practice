@@ -155,6 +155,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     func configureArrowNode(_ arrowNode: SCNNode) { //set launch and trajectory of arrow
         // Configure physics
+        sceneView.scene.rootNode.childNodes.filter({ $0.name == "Cone"}).forEach({$0.removeFromParentNode()})
         scene = SCNScene()
         scene?.physicsWorld.contactDelegate = self
         let physics = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape( geometry: arrowNode.geometry!, options: nil))
@@ -201,8 +202,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                         let moveValue:CGFloat = 0.0
                         let duration:TimeInterval = 5
                         var moveAction:SCNAction
+                        arrowNode.eulerAngles = SCNVector3Make(-1, 0, 1)
                         let power : Double = (startingPoint!.timeIntervalSinceNow * -1)
-                        moveAction = SCNAction.moveBy(x: CGFloat(arrowDirection.x) * 5.0 * -power, y: CGFloat(arrowDirection.y) * 5.0 * -power, z: Double(arrowDirection.z) * 5.0 * -power, duration: duration)
+                        moveAction = SCNAction.moveBy(x: CGFloat(arrowDirection.x) * 5.0 * -power, y: CGFloat(arrowDirection.y) * 5.0 * -power, z: CGFloat(arrowDirection.z) * 5.0 * -power, duration: duration)
                         
                         node.runAction(moveAction)
                     }
