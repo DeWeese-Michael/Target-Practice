@@ -155,6 +155,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     func configureArrowNode(_ arrowNode: SCNNode) { //set launch and trajectory of arrow
         // Configure physics
+        sceneView.scene.rootNode.childNodes.filter({ $0.name == "Cone"}).forEach({$0.removeFromParentNode()})
         scene = SCNScene()
         scene?.physicsWorld.contactDelegate = self
         let physics = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape( geometry: arrowNode.geometry!, options: nil))
