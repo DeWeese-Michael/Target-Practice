@@ -225,7 +225,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
     }
     
-    @IBAction func fireButtonReleased(_ sender: UIButton) { 
+    /*
+     Consider removing this function as the functionality for arrow release has been moved to the LongTapGesture Recognizer.
+     */
+    @IBAction func fireButtonReleased(_ sender: UIButton) {
         //draw and release arrow
         isFiring = false
 
