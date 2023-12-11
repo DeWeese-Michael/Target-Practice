@@ -56,7 +56,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
 //        setupMotionManager()
         createArrowNode()
         
-        shootArrow()
+        //shootArrow()
         
         sceneView.frame = self.view.bounds
         self.sceneView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -84,42 +84,80 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
             
             //draw and release arrow
             isFiring = false
-
-                if let arrowNode = createArrowNode() {
-                    configureArrowNode(arrowNode)
-        
-                    // Add the arrow node to the scene
+            
+            if let arrowNode = createArrowNode() {
+                configureArrowNode(arrowNode)
+                
+                // Add the arrow node to the scene
+                sceneView.scene.rootNode.addChildNode(arrowNode)
+                
+                if let currentFrame = sceneView.session.currentFrame {
+                    // Get the camera's position and orientation
+                    var translation = matrix_identity_float4x4
+                    let arrowTransform = currentFrame.camera.transform * translation
+                    
+                    // Set the arrow node's transform
+                    arrowNode.simdTransform = arrowTransform
+                    
+                    // Add arrow node to the scene
                     sceneView.scene.rootNode.addChildNode(arrowNode)
                     
-                    if let currentFrame = sceneView.session.currentFrame {
-                        // Get the camera's position and orientation
+                    // Apply a forward velocity to the arrow
+                    let arrowDirection = arrowTransform.columns.2
+                    
+                    if let node = lastNode{
+                        let moveValue:Float = 100.0
+                        let duration:TimeInterval = 5
+                        var moveAction:SCNAction
+                        arrowNode.eulerAngles = SCNVector3Make(-arrowDirection.x, arrowDirection.y, -arrowDirection.z)
+                        let power : Double = (startingPoint!.timeIntervalSinceNow * -1)
+                        //arrowNode.simdRotation = simd_float4(arrowDirection.x, arrowDirection.x, arrowDirection.z, )
+                        print("Power: \(power)")
+                        //arrowNode.worldOrientation = SCNQuaternion()
                         var translation = matrix_identity_float4x4
-                        let arrowTransform = currentFrame.camera.transform * translation
                         
-                        // Set the arrow node's transform
-                        arrowNode.simdTransform = arrowTransform
+                        /**
+                         Done using this source:
+                         https://medium.com/macoclock/augmented-reality-911-transform-matrix-4x4-af91a9718246
+                         */
                         
-                        // Add arrow node to the scene
-                        sceneView.scene.rootNode.addChildNode(arrowNode)
+                        //90 degree rotation on y-axis to point arrow forward
+                        /*translation.columns.0.x = cos(-3 * Float(Double.pi)/2)
+                        translation.columns.2.x = -1*sin(-3*Float(Double.pi)/2)
+                         
+                        translation.columns.0.z = sin(-3*Float(Double.pi)/2)
+                        translation.columns.2.z = cos(-3*Float(Double.pi)/2)*/
                         
-                        // Apply a forward velocity to the arrow
-                        let arrowDirection = arrowTransform.columns.2
+                        //Translation on x-axis
+                        translation.columns.1.y = cos(-1*Float(Double.pi)/2)
+                        translation.columns.1.z = sin(-1*Float(Double.pi)/2)
                         
-                        if let node = lastNode{
-                            let moveValue:CGFloat = 0.0
-                            let duration:TimeInterval = 5
-                            var moveAction:SCNAction
-                            arrowNode.eulerAngles = SCNVector3Make(-1, 0, 1)
-                            let power : Double = (startingPoint!.timeIntervalSinceNow * -3)
-                            
-                            print("Power: \(power)")
-                            
-                            moveAction = SCNAction.moveBy(x: CGFloat(arrowDirection.x) * 5.0 * -power, y: CGFloat(arrowDirection.y) * 5.0 * -power, z: CGFloat(arrowDirection.z) * 5.0 * -power, duration: duration)
-                            
-                            node.runAction(moveAction)
-                        }
+                        translation.columns.2.y = -1 * sin(-1*Float(Double.pi)/2)
+                        translation.columns.2.z = cos(-1*Float(Double.pi)/2)
+                        
+                        
+                        
+                        //-180 degree rotation on z-axis to show arrow on right side
+                        /*translation.columns.0.x = cos(Float(Double.pi))
+                        translation.columns.1.x = sin(Float(Double.pi))
+                        translation.columns.0.y = -1 * sin(Float(Double.pi))
+                        translation.columns.1.y = cos(cos(-1*Float(Double.pi)/2))*/
+
+                        
+                        print(translation)
+                        
+                        arrowNode.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
+                        
+                        let arrowVelocity = SCNVector3(arrowDirection.x * moveValue, arrowDirection.y * moveValue, arrowDirection.z * moveValue)
+                        
+                        //moveAction = SCNAction.moveBy(x: Double(arrowDirection.x * moveValue) * -power, y: Double(arrowDirection.y * moveValue) * -power, z: Double((arrowDirection.z * moveValue)) * -power, duration: duration)
+                        moveAction = SCNAction.moveBy(x: CGFloat(arrowVelocity.x) * -power, y: CGFloat(arrowVelocity.y) * -power, z: CGFloat(arrowVelocity.z) * -power, duration: duration)
+                        
+                        node.runAction(moveAction)
                     }
                 }
+            }
+            
         }
     }
     
@@ -225,46 +263,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
     }
     
-    /*
-     Consider removing this function as the functionality for arrow release has been moved to the LongTapGesture Recognizer.
-     */
-    @IBAction func fireButtonReleased(_ sender: UIButton) {
-        //draw and release arrow
-        isFiring = false
 
-            if let arrowNode = createArrowNode() {
-                configureArrowNode(arrowNode)
-    
-                // Add the arrow node to the scene
-                sceneView.scene.rootNode.addChildNode(arrowNode)
-                
-                if let currentFrame = sceneView.session.currentFrame {
-                    // Get the camera's position and orientation
-                    var translation = matrix_identity_float4x4
-                    let arrowTransform = currentFrame.camera.transform * translation
-                    
-                    // Set the arrow node's transform
-                    arrowNode.simdTransform = arrowTransform
-                    
-                    // Add arrow node to the scene
-                    sceneView.scene.rootNode.addChildNode(arrowNode)
-                    
-                    // Apply a forward velocity to the arrow
-                    let arrowDirection = arrowTransform.columns.2
-                    
-                    if let node = lastNode{
-                        let moveValue:CGFloat = 0.0
-                        let duration:TimeInterval = 5
-                        var moveAction:SCNAction
-                        arrowNode.eulerAngles = SCNVector3Make(-1, 0, 1)
-                        let power : Double = (startingPoint!.timeIntervalSinceNow * -1)
-                        moveAction = SCNAction.moveBy(x: CGFloat(arrowDirection.x) * 5.0 * -power, y: CGFloat(arrowDirection.y) * 5.0 * -power, z: CGFloat(arrowDirection.z) * 5.0 * -power, duration: duration)
-                        
-                        node.runAction(moveAction)
-                    }
-                }
-            }
-}
+
     
     @IBAction func handleTap(_ sender: UIButton) {
         
@@ -297,11 +297,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         // step one create a translation transform
         var translation = matrix_identity_float4x4
+        
+        //Rotates target by 90 degrees
+        translation.columns.0.x = cos(Float(Double.pi/2))
+        translation.columns.1.x = -1 * sin(Float(Double.pi/2))
+        translation.columns.0.y = sin(Float(Double.pi/2))
+        translation.columns.1.y = cos(Float(Double.pi/2))
         translation.columns.3.z = -3
-        translation.columns.0.x = 0
-        translation.columns.0.y = -1
-        translation.columns.1.x = -1
-        translation.columns.1.y = 0
         //print(translation)
         
         
