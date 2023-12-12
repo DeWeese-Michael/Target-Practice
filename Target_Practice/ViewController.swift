@@ -182,7 +182,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                         
                         let arrowVelocity = SCNVector3(arrowDirection.x * moveValue, arrowDirection.y * moveValue, arrowDirection.z * moveValue)
                         
-                        arrowNode.physicsBody?.velocity = SCNVector3(x: arrowDirection.x * moveValue, y: arrowDirection.y * moveValue, z: -1 * arrowDirection.z * moveValue * Float(power))
+                        arrowNode.physicsBody?.velocity = SCNVector3(x: -1 * arrowDirection.x * moveValue, y: -1 * arrowDirection.y * moveValue, z: -1 * arrowDirection.z * moveValue * Float(power))
+                        print("Current Frame Transform: \(currentFrame.camera.transform)")
                         /*
                         //moveAction = SCNAction.moveBy(x: Double(arrowDirection.x * moveValue) * -power, y: Double(arrowDirection.y * moveValue) * -power, z: Double((arrowDirection.z * moveValue)) * -power, duration: duration)
                         moveAction = SCNAction.moveBy(x: CGFloat(arrowVelocity.x) * -power, y: CGFloat(arrowVelocity.y) * -power, z: CGFloat(arrowVelocity.z) * -power, duration: duration)
@@ -364,16 +365,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     func updateScore(){
         //if(updating){return}
         // change the current object we are asking the participant to find
-        
-        scoreLabel.text = "\(self.score)"
-        
-        
         // change the current object we are asking the participant to find
         
         scoreLabel.layer.add(animation, forKey: animationKey)
-        scoreLabel.text = "You: \(self.score)"
+        scoreLabel.text = "Score: \(self.score)"
         
-        if(self.score>=5){
+        if(self.score>=50){
             // if here, End the game
             scoreLabel.layer.add(animation, forKey: animationKey)
             scoreLabel.text = "You Win!"
