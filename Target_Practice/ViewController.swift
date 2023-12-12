@@ -45,7 +45,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     var lastNode:SCNNode? = nil
     var startingPoint: Date?
     var isPressing: Bool = false
-    
+    var frictionCoeff: CGFloat = CGFloat(1.0)
     
     
     let animation = CATransition()
@@ -63,9 +63,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         sceneView.delegate = self
         sceneView.showsStatistics = true
+        sceneView.scene.physicsWorld.contactDelegate = self
         startingPoint = Date()
         self.focusNode.viewDelegate = sceneView
         sceneView.scene.rootNode.addChildNode(self.focusNode)
+        setupMotion()
+    }
+    
+    // MARK: Motion in World
+    func setupMotion(){
+        // use motion for camera movement
+        motionManager = CMMotionManager()
+        motionManager.deviceMotionUpdateInterval = 1/30.0
+        
+        motionManager.startDeviceMotionUpdates(to: OperationQueue.main)
+        {
+            (deviceMotion, error) -> Void in
+            
+            if let deviceMotion = deviceMotion{
+                
+                // update camera angle based upon the difference to original position
+                /*let pitch = Float(self.initialAttitude!.pitch - deviceMotion.attitude.pitch)
+                let yaw = Float(self.initialAttitude!.yaw - deviceMotion.attitude.yaw)
+                
+                self.cameraNode.eulerAngles.x = -pitch
+                self.cameraNode.eulerAngles.y = -yaw*/
+                
+                // rink has x in same direction, left or right in rink
+                self.sceneView.scene.physicsWorld.gravity.x =  Float(deviceMotion.gravity.x)*90.8
+                
+                // reverse the y device such that subtle changes
+                // really change the up and down rink actions
+                self.sceneView.scene.physicsWorld.gravity.z =  Float(deviceMotion.gravity.y)*(-900.8)
+                
+                // hockey rink has "y" in the up down direction
+                // so gravity is down when looking down (z device)
+                // onto the rink
+                self.sceneView.scene.physicsWorld.gravity.y =  Float(deviceMotion.gravity.z)*(90.8)
+                
+            }
+            
+        }
     }
     
     
@@ -121,84 +159,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                          https://medium.com/macoclock/augmented-reality-911-transform-matrix-4x4-af91a9718246
                          */
                         
-                        //90 degree rotation on y-axis to point arrow forward
-                        /*translation.columns.0.x = cos(-3 * Float(Double.pi)/2)
-                        translation.columns.2.x = -1*sin(-3*Float(Double.pi)/2)
-                         
-                        translation.columns.0.z = sin(-3*Float(Double.pi)/2)
-                        translation.columns.2.z = cos(-3*Float(Double.pi)/2)*/
-                        
                         //Translation on x-axis
                         translation.columns.1.y = cos(-1*Float(Double.pi)/2)
                         translation.columns.1.z = sin(-1*Float(Double.pi)/2)
                         
                         translation.columns.2.y = -1 * sin(-1*Float(Double.pi)/2)
                         translation.columns.2.z = cos(-1*Float(Double.pi)/2)
-                        
-                        
-                        
-                        //-180 degree rotation on z-axis to show arrow on right side
-                        /*translation.columns.0.x = cos(Float(Double.pi))
-                        translation.columns.1.x = sin(Float(Double.pi))
-                        translation.columns.0.y = -1 * sin(Float(Double.pi))
-                        translation.columns.1.y = cos(cos(-1*Float(Double.pi)/2))*/
 
-                        
-                        print(translation)
                         
                         arrowNode.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
                         
                         let arrowVelocity = SCNVector3(arrowDirection.x * moveValue, arrowDirection.y * moveValue, arrowDirection.z * moveValue)
                         
+                        arrowNode.physicsBody?.velocity = SCNVector3(x: arrowDirection.x * moveValue, y: arrowDirection.y * moveValue, z: -1 * arrowDirection.z * moveValue * Float(power))
+                        /*
                         //moveAction = SCNAction.moveBy(x: Double(arrowDirection.x * moveValue) * -power, y: Double(arrowDirection.y * moveValue) * -power, z: Double((arrowDirection.z * moveValue)) * -power, duration: duration)
                         moveAction = SCNAction.moveBy(x: CGFloat(arrowVelocity.x) * -power, y: CGFloat(arrowVelocity.y) * -power, z: CGFloat(arrowVelocity.z) * -power, duration: duration)
                         
-                        node.runAction(moveAction)
+                        node.runAction(moveAction)*/
                     }
                 }
             }
             
         }
     }
-    
-    
-    func shootArrow() {
-        // Load the arrow scene
-        guard let arrowScene = SCNScene(named: "arrow_horizontal.scn") else {
-            print("Error: Unable to load arrow scene.")
-            return
-        }
 
-        // Retrieve the arrow node from the scene
-        guard let arrowNode = arrowScene.rootNode.childNode(withName: "Cone", recursively: true) else {
-            print("Error: Unable to find arrow node in the scene.")
-            return
-        }
-        
-        arrowScene.physicsWorld.gravity = SCNVector3(x: 0, y: 0, z: 0 )
-        // Set the initial position of the arrow node in front of the camera
-        if let currentFrame = sceneView.session.currentFrame {
-            // Get the camera's position and orientation
-            var translation = matrix_identity_float4x4
-            let arrowTransform = currentFrame.camera.transform * translation
-
-            // Set the arrow node's transform
-            arrowNode.simdTransform = arrowTransform
-
-            // Add arrow node to the scene
-            sceneView.scene.rootNode.addChildNode(arrowNode)
-
-            // Apply a forward velocity to the arrow
-            let arrowDirection = arrowTransform.columns.2
-            let arrowVelocity = SCNVector3(arrowDirection.x * 5.0, arrowDirection.y * 5.0, arrowDirection.z * 5.0) // Adjust the speed
-            //let targetVector = SCNVector3Make( cameraNode.x - planeNode.x, cameraNode.y - planeNode.y, cameraNode.z - planeNode.z)
-
-           
-        } else {
-            print("Error: Unable to get current frame from AR session.")
-        }
-    }
-    
     func createArrowNode() -> SCNNode? {
         
         
@@ -256,16 +241,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         // Set appearance properties
         arrowNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
         arrowNode.physicsBody = physics
+        arrowNode.physicsBody?.friction = frictionCoeff
         scene.rootNode.addChildNode(arrowNode)
         self.lastNode = arrowNode
-        
-        
-        
     }
-    
 
-
-    
     @IBAction func handleTap(_ sender: UIButton) {
         
         // grab the current AR session frame from the scene, if possible
@@ -274,12 +254,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         }
         
         // setup some geometry for a simple plane
-        // TODO - Change snapshot to be a constant size, not small
-        // Create new SCPlane outside of this function
-        // if nil; need to create SCNPlane and add node
-        // else, update position
-        let imagePlane = SCNPlane(width:sceneView.bounds.width/600,
-                                  height:sceneView.bounds.height/600)
+        let imagePlane = SCNPlane(width:sceneView.bounds.width/5,
+                                  height:sceneView.bounds.height/5)
         
         // TODO - Add snapshot change distance
 
@@ -290,6 +266,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         let planeNode = SCNNode(geometry:imagePlane)
         planeNode.name = "target"
         sceneView.scene.rootNode.childNodes.filter({ $0.name == "target" }).forEach({ $0.removeFromParentNode() })
+        
+        let physics = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape( geometry: planeNode.geometry!, options: nil))
+        physics.isAffectedByGravity = false
+       
+
+        physics.categoryBitMask = 0xFFFF
+        physics.collisionBitMask = 0xFFFF
+        physics.contactTestBitMask = 0xFFFF
+
+        planeNode.physicsBody = physics
+        let targetMass = CGFloat(1000000)
+        planeNode.physicsBody?.mass = targetMass
+        planeNode.physicsBody?.friction = frictionCoeff
         
         sceneView.scene.rootNode.addChildNode(planeNode)
         
@@ -303,7 +292,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         translation.columns.1.x = -1 * sin(Float(Double.pi/2))
         translation.columns.0.y = sin(Float(Double.pi/2))
         translation.columns.1.y = cos(Float(Double.pi/2))
-        translation.columns.3.z = -3
+        translation.columns.3.z = -300
         //print(translation)
         
         
@@ -311,9 +300,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         planeNode.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
          
     }
+
     
     //Function that handles arrow/target contact
     func physicsWorld(_ world: SCNPhysicsWorld, didEnd contact: SCNPhysicsContact) {
+        
+        let zeroVelocity = SCNVector3(x: 0.0, y: 0.0, z: 0.0)
         
         func updateContact(){
             // Add
@@ -326,15 +318,32 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         if let nameA = contact.nodeA.name,
             let nameB = contact.nodeB.name,
-            nameA == "target" || nameB == "cone"{ //If the ball makes contact with the hoop or the backboard
+            nameA == "target" || nameB == "Cone"{ //If the ball makes contact with the hoop or the backboard
+            print("------FIRST IF STATEMENT------")
+            print("Contact made nodeA.X: \(contact.nodeA.simdPosition.x)")
+            print("Contact made nodeA.Y: \(contact.nodeA.simdPosition.y)")
+            
+            print("Contact made nodeB.X: \(contact.nodeB.simdPosition.x)")
+            print("Contact made nodeB.Y: \(contact.nodeB.simdPosition.y)")
+            
+            contact.nodeB.physicsBody?.velocity = SCNVector3(x: 0.0, y: 0.0, z: 0.0)
+
             // remove basketball from the scene
             updateContact()
         }
         
         if let nameB = contact.nodeB.name,
            let nameA = contact.nodeA.name,
-            nameB == "target" || nameA == "cone"{//If the ball makes contact with the hoop or the backboard
+            nameB == "target" || nameA == "Cone"{//If the ball makes contact with the hoop or the backboard
+            print("------SECOND IF STATEMENT------")
+            print("Contact made nodeA.X: \(contact.nodeA.simdPosition.x)")
+            print("Contact made nodeA.Y: \(contact.nodeA.simdPosition.y)")
             
+            print("Contact made nodeB.X: \(contact.nodeB.simdPosition.x)")
+            print("Contact made nodeB.Y: \(contact.nodeB.simdPosition.y)")
+            
+            contact.nodeB.physicsBody?.velocity = SCNVector3(x: 0.0, y: 0.0, z: 0.0)
+
             updateContact()
         }
         
