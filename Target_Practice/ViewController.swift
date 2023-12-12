@@ -47,6 +47,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     var isPressing: Bool = false
     var frictionCoeff: CGFloat = CGFloat(1.0)
     
+    @IBOutlet weak var powerBar: UIProgressView!
     
     let animation = CATransition()
     let animationKey = convertFromCATransitionType(CATransitionType.push)
@@ -112,14 +113,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         
         if sender.state == .began{
             self.isPressing = true
+            self.isFiring = true
             print("Ended Began State. State: \(self.isPressing)")
             self.startingPoint = Date()
+            Timer.scheduledTimer(withTimeInterval: 1.0/30, repeats: true) { _ in
+                if self.isFiring{
+                    self.powerBar.progress = Float(self.startingPoint!.timeIntervalSinceNow * -1)/7
+                }else{
+                    self.powerBar.progress = 0.0
+                }
+                
+            }
+
         }
         
         if sender.state == .ended{
             self.isPressing = false
             print("Ended End State. State: \(self.isPressing)")
-            
+
             //draw and release arrow
             isFiring = false
             

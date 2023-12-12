@@ -59,6 +59,10 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.01" translatesAutoresizingMaskIntoConstraints="NO" id="wXB-Kt-4Zb">
+                                <rect key="frame" x="49" y="639" width="316" height="4"/>
+                                <color key="progressTintColor" systemColor="systemRedColor"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -66,9 +70,12 @@
                             <constraint firstItem="OoZ-ae-KhM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="1xA-b7-d4W"/>
                             <constraint firstItem="AhD-R4-ZPV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="49" id="3mL-H0-5C8"/>
                             <constraint firstItem="OoZ-ae-KhM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="6L2-Aj-pPA"/>
+                            <constraint firstItem="AhD-R4-ZPV" firstAttribute="top" secondItem="wXB-Kt-4Zb" secondAttribute="bottom" constant="15" id="Hir-7A-Cvg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="AhD-R4-ZPV" secondAttribute="bottom" constant="43.670000000000002" id="bO3-SA-uqe"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="AhD-R4-ZPV" secondAttribute="trailing" constant="49" id="dnH-kd-AMt"/>
+                            <constraint firstItem="wXB-Kt-4Zb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="49" id="don-Ds-KB5"/>
                             <constraint firstItem="OoZ-ae-KhM" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="hbf-d9-fqk"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="wXB-Kt-4Zb" secondAttribute="trailing" constant="49" id="kbu-Xl-d38"/>
                             <constraint firstItem="OoZ-ae-KhM" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="p94-DI-Wvw"/>
                             <constraint firstItem="AhD-R4-ZPV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="638" id="qSe-6u-kZE"/>
                         </constraints>
@@ -76,12 +83,13 @@
                     <connections>
                         <outlet property="fireButton" destination="K0W-J1-cb3" id="hhh-cd-wtB"/>
                         <outlet property="freezeFrame" destination="6GL-1S-aHX" id="7DR-Sq-Ugu"/>
+                        <outlet property="powerBar" destination="wXB-Kt-4Zb" id="hXv-Ci-WeX"/>
                         <outlet property="sceneView" destination="OoZ-ae-KhM" id="Mr4-RJ-v9x"/>
                         <outlet property="scoreLabel" destination="07O-DZ-3mV" id="Jhx-tP-TAo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="JhJ-rE-wa3">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.0" id="JhJ-rE-wa3">
                     <connections>
                         <action selector="longPressHandler:" destination="BYZ-38-t0r" id="Z9L-od-85w"/>
                     </connections>
